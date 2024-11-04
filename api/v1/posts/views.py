@@ -2,6 +2,7 @@ from fastapi import  HTTPException
 from .schemas import PostSchema
 
 from .data import posts
+from api.services.security import JwtService
 
 
 async def get_posts():
@@ -14,7 +15,8 @@ async def get_post(post_id: int):
     return post
 
 
-async def create_post(post: PostSchema):
+async def create_post(post: PostSchema, token: str):
+    JwtService.verify_token(token)
     post.id = len(posts) + 1
     posts.append(post)
     return post
